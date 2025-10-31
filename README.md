@@ -1,6 +1,10 @@
 # PSR-15 Health Check Request Handler
 
+[English](README.md) | [中文](README.zh-CN.md)
+
 [![Latest Version](https://img.shields.io/packagist/v/tourze/psr15-health-check-request-handler.svg)](https://packagist.org/packages/tourze/psr15-health-check-request-handler)
+[![PHP Version Require](https://img.shields.io/packagist/php-v/tourze/psr15-health-check-request-handler.svg)](https://packagist.org/packages/tourze/psr15-health-check-request-handler)
+[![codecov](https://codecov.io/gh/tourze/psr15-health-check-request-handler/branch/main/graph/badge.svg)](https://codecov.io/gh/tourze/psr15-health-check-request-handler)
 [![License](https://img.shields.io/github/license/tourze/psr15-health-check-request-handler.svg)](./LICENSE)
 
 A simple and lightweight PSR-15 Request Handler for health check endpoints, designed for easy integration into any HTTP service or middleware pipeline.

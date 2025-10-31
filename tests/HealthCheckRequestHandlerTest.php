@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace Tourze\PSR15HealthCheckRequestHandler\Tests;
 
 use Nyholm\Psr7\ServerRequest;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use ReflectionProperty;
 use Tourze\PSR15HealthCheckRequestHandler\HealthCheckRequestHandler;
 
 /**
  * 健康检查请求处理器测试类
+ *
+ * @internal
  */
-class HealthCheckRequestHandlerTest extends TestCase
+#[CoversClass(HealthCheckRequestHandler::class)]
+final class HealthCheckRequestHandlerTest extends TestCase
 {
     /**
      * 测试默认健康检查路径 /health 返回200
@@ -25,7 +28,7 @@ class HealthCheckRequestHandlerTest extends TestCase
         $response = $handler->handle($request);
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('ok', (string)$response->getBody());
+        $this->assertSame('ok', (string) $response->getBody());
     }
 
     /**
@@ -39,7 +42,7 @@ class HealthCheckRequestHandlerTest extends TestCase
         $response = $handler->handle($request);
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('ok', (string)$response->getBody());
+        $this->assertSame('ok', (string) $response->getBody());
     }
 
     /**
@@ -53,7 +56,7 @@ class HealthCheckRequestHandlerTest extends TestCase
         $response = $handler->handle($request);
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('ok', (string)$response->getBody());
+        $this->assertSame('ok', (string) $response->getBody());
     }
 
     /**
@@ -67,7 +70,7 @@ class HealthCheckRequestHandlerTest extends TestCase
         $response = $handler->handle($request);
 
         $this->assertSame(404, $response->getStatusCode());
-        $this->assertSame('Not Found', (string)$response->getBody());
+        $this->assertSame('Not Found', (string) $response->getBody());
     }
 
     /**
@@ -75,19 +78,14 @@ class HealthCheckRequestHandlerTest extends TestCase
      */
     public function testCustomHealthPath(): void
     {
-        $handler = new HealthCheckRequestHandler();
-
-        // 使用反射设置自定义健康检查路径
-        $pathsProperty = new ReflectionProperty(HealthCheckRequestHandler::class, 'healthCheckPaths');
-        $pathsProperty->setAccessible(true);
-        $pathsProperty->setValue($handler, ['/custom-health']);
+        $handler = new HealthCheckRequestHandler(['/custom-health']);
 
         // 测试自定义路径
         $request = new ServerRequest('GET', '/custom-health');
         $response = $handler->handle($request);
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('ok', (string)$response->getBody());
+        $this->assertSame('ok', (string) $response->getBody());
 
         // 确认原始路径不再被识别为健康检查路径
         $request = new ServerRequest('GET', '/health');
@@ -101,20 +99,15 @@ class HealthCheckRequestHandlerTest extends TestCase
      */
     public function testCustomOkText(): void
     {
-        $handler = new HealthCheckRequestHandler();
         $customText = 'service is healthy';
-
-        // 使用反射设置自定义响应文本
-        $okTextProperty = new ReflectionProperty(HealthCheckRequestHandler::class, 'okText');
-        $okTextProperty->setAccessible(true);
-        $okTextProperty->setValue($handler, $customText);
+        $handler = new HealthCheckRequestHandler(null, $customText);
 
         // 测试自定义响应文本
         $request = new ServerRequest('GET', '/health');
         $response = $handler->handle($request);
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame($customText, (string)$response->getBody());
+        $this->assertSame($customText, (string) $response->getBody());
     }
 
     /**
@@ -135,5 +128,27 @@ class HealthCheckRequestHandlerTest extends TestCase
         $response = $handler->handle($request);
 
         $this->assertSame(200, $response->getStatusCode());
+    }
+
+    /**
+     * 测试handle方法的基本功能
+     */
+    public function testHandleProcessesHealthCheckAndNonHealthRequests(): void
+    {
+        $handler = new HealthCheckRequestHandler();
+
+        // 测试健康检查请求
+        $healthRequest = new ServerRequest('GET', '/health');
+        $healthResponse = $handler->handle($healthRequest);
+
+        $this->assertSame(200, $healthResponse->getStatusCode());
+        $this->assertSame('ok', (string) $healthResponse->getBody());
+
+        // 测试非健康检查请求
+        $notFoundRequest = new ServerRequest('GET', '/api/users');
+        $notFoundResponse = $handler->handle($notFoundRequest);
+
+        $this->assertSame(404, $notFoundResponse->getStatusCode());
+        $this->assertSame('Not Found', (string) $notFoundResponse->getBody());
     }
 }

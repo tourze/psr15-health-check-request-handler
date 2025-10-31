@@ -1,6 +1,11 @@
 # PSR-15 健康检查请求处理器
 
+[English](README.md) | [中文](README.zh-CN.md)
+
 [![最新版本](https://img.shields.io/packagist/v/tourze/psr15-health-check-request-handler.svg)](https://packagist.org/packages/tourze/psr15-health-check-request-handler)
+[![PHP版本要求](https://img.shields.io/packagist/php-v/tourze/psr15-health-check-request-handler.svg)](https://packagist.org/packages/tourze/psr15-health-check-request-handler)
+[![构建状态](https://github.com/tourze/psr15-health-check-request-handler/actions/workflows/ci.yml/badge.svg)](https://github.com/tourze/psr15-health-check-request-handler/actions)
+[![代码覆盖率](https://codecov.io/gh/tourze/psr15-health-check-request-handler/branch/main/graph/badge.svg)](https://codecov.io/gh/tourze/psr15-health-check-request-handler)
 [![许可证](https://img.shields.io/github/license/tourze/psr15-health-check-request-handler.svg)](./LICENSE)
 
 一个简单轻量的 PSR-15 健康检查请求处理器，可便捷集成到任何 HTTP 服务或中间件栈。

@@ -14,14 +14,24 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class HealthCheckRequestHandler implements RequestHandlerInterface
 {
-    private array $healthCheckPaths = [
-        '/health',
-        '/health.php',
-        '/health.html',
-        '/health.asp',
-    ];
+    /** @var array<string> */
+    private array $healthCheckPaths;
 
-    private string $okText = 'ok';
+    private string $okText;
+
+    /**
+     * @param array<string> $healthCheckPaths
+     */
+    public function __construct(?array $healthCheckPaths = null, ?string $okText = null)
+    {
+        $this->healthCheckPaths = $healthCheckPaths ?? [
+            '/health',
+            '/health.php',
+            '/health.html',
+            '/health.asp',
+        ];
+        $this->okText = $okText ?? 'ok';
+    }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
